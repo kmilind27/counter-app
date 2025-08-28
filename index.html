@@ -147,8 +147,8 @@
             recognition.onresult = (event) => {
                 const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
                 
-                // Check if the transcript contains the word "ram"
-                if (transcript.includes("ram")) {
+                // Check if the transcript contains the word "ram" or "radha"
+                if (transcript.includes("ram") || transcript.includes("radha")) {
                     updateCounter(count + 1);
                 }
             };
