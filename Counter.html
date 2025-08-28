@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;  /* Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;      /* IE10+ */
+            user-select: none;          /* Standard */
+        }
+        .main-button {
+            transition: all 0.3s ease-in-out;
+        }
+        .main-button:hover {
+            transform: scale(1.05);
+        }
+        .main-button:active {
+            transform: scale(0.95);
+        }
+        .listening-btn {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(100, 116, 139, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(100, 116, 139, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(100, 116, 139, 0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-4 transition-colors duration-300">
+
+    <div class="relative w-full max-w-sm flex flex-col items-center">
+        
+        <!-- Light/Dark Mode Toggle Button -->
+        <button id="themeToggleButton" title="Dark Mode" class="absolute top-4 left-4 w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-800 shadow-md transition-all duration-300 transform hover:scale-110 active:scale-95">
+            <!-- Sun icon for light mode -->
+            <svg id="sunIcon" class="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <!-- Moon icon for dark mode -->
+            <svg id="moonIcon" class="w-6 h-6 text-gray-700 dark:text-gray-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+
+        <!-- Color Change Button -->
+        <button id="colorChangeButton" title="Change Color" class="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-800 shadow-md transition-all duration-300 transform hover:scale-110 active:scale-95">
+            <!-- SVG icon for a palette -->
+            <svg class="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2m-4-4h2m-4 4h2m12 12V9a2 2 0 00-2-2h-4a2 2 0 00-2 2v12m4-12h2m-4 4h2m-4 4h2m-4 4h2"></path>
+            </svg>
+        </button>
+
+        <!-- Main Button -->
+        <div 
+            id="mainButton"
+            class="main-button relative w-60 h-60 rounded-full shadow-xl cursor-pointer flex items-center justify-center mt-16"
+            style="background-color: #4f46e5;"
+        >
+            <span id="counterDisplay" class="text-white text-7xl font-bold">0</span>
+            <div class="absolute inset-0 rounded-full border-4 border-white opacity-20 pointer-events-none"></div>
+        </div>
+    </div>
+    
+    <!-- Control Buttons -->
+    <div class="absolute bottom-10 left-10 right-10 flex justify-between space-x-4">
+        
+        <!-- Decrement Button -->
+        <button 
+            id="decrementButton"
+            title="Decrement"
+            class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-900 text-red-500 text-4xl font-light shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95"
+        >
+            -
+        </button>
+
+        <!-- Voice Recognition Button -->
+        <button 
+            id="voiceButton"
+            title="Voice Off"
+            class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-500 shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95"
+        >
+             <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+        </button>
+
+        <!-- Reset Button -->
+        <button 
+            id="resetButton"
+            title="Reset"
+            class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-900 text-blue-500 text-4xl font-light shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95"
+        >
+            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.834A6.711 6.711 0 0017.25 4.671a6.711 6.711 0 00-5.465 6.425V12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // Get all necessary DOM elements
+        const counterDisplay = document.getElementById('counterDisplay');
+        const mainButton = document.getElementById('mainButton');
+        const decrementButton = document.getElementById('decrementButton');
+        const resetButton = document.getElementById('resetButton');
+        const colorChangeButton = document.getElementById('colorChangeButton');
+        const themeToggleButton = document.getElementById('themeToggleButton');
+        const voiceButton = document.getElementById('voiceButton');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const body = document.body;
+        const statusMessage = document.createElement('div');
+        statusMessage.className = "absolute bottom-1/4 mb-4 text-center text-gray-500 dark:text-gray-400 text-sm font-medium";
+        document.body.appendChild(statusMessage);
+
+        // Initialize counter variable
+        let count = 0;
+        
+        // Define the array of rainbow colors
+        const rainbowColors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+        let currentColorIndex = 0;
+
+        // Speech Recognition setup (new code for this feature)
+        let recognition;
+        let isListening = false;
+
+        // Check if the browser supports the Web Speech API
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            
+            // This setting makes the recognition continuous, so it doesn't stop after the first word.
+            recognition.continuous = true;
+            recognition.interimResults = false; // We only want final, confirmed results.
+            recognition.lang = 'en-US'; // Set the language for better accuracy.
+            
+            // Event handlers
+            recognition.onresult = (event) => {
+                const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+                
+                // Check if the transcript contains the word "ram"
+                if (transcript.includes("ram")) {
+                    updateCounter(count + 1);
+                }
+            };
+            
+            recognition.onstart = () => {
+                statusMessage.textContent = "Listening...";
+                voiceButton.title = "Listening...";
+                voiceButton.classList.add('listening-btn');
+            };
+
+            recognition.onend = () => {
+                if (isListening) {
+                    recognition.start(); // Restart if still supposed to be listening
+                } else {
+                    statusMessage.textContent = "Voice Off";
+                    voiceButton.title = "Voice Off";
+                    voiceButton.classList.remove('listening-btn');
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                if (event.error === 'not-allowed' || event.error === 'denied') {
+                    statusMessage.textContent = "Permission denied";
+                    voiceButton.disabled = true;
+                } else {
+                    statusMessage.textContent = "Error. Try again.";
+                }
+                isListening = false;
+                voiceButton.classList.remove('listening-btn');
+                voiceButton.title = "Voice Off";
+            };
+
+            // Event listener for the new voice button
+            voiceButton.addEventListener('click', () => {
+                if (isListening) {
+                    recognition.stop();
+                    isListening = false;
+                } else {
+                    try {
+                        recognition.start();
+                        isListening = true;
+                    } catch (e) {
+                        console.error(e);
+                        statusMessage.textContent = "Error. Try again.";
+                    }
+                }
+            });
+
+        } else {
+            // Display a message if the Web Speech API is not supported
+            voiceButton.disabled = true;
+            voiceButton.title = "Voice not supported";
+            statusMessage.textContent = "Voice not supported in this browser.";
+            console.error("Web Speech API is not supported in this browser.");
+        }
+
+        /**
+         * Updates the theme based on local storage or system preference on load.
+         */
+        function initializeTheme() {
+            const isDarkMode = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (isDarkMode) {
+                body.classList.add('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                themeToggleButton.title = "Light Mode";
+            } else {
+                body.classList.remove('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                themeToggleButton.title = "Dark Mode";
+            }
+        }
+        
+        /**
+         * Updates the counter on the screen.
+         * @param {number} newCount - The new value of the counter.
+         */
+        function updateCounter(newCount) {
+            count = newCount;
+            counterDisplay.textContent = count;
+        }
+
+        // Event listener for the main increment button
+        mainButton.addEventListener('click', () => {
+            updateCounter(count + 1);
+        });
+
+        // Event listener for the decrement button
+        decrementButton.addEventListener('click', () => {
+            // Ensure the count never goes below zero
+            updateCounter(Math.max(0, count - 1));
+        });
+
+        // Event listener for the reset button
+        resetButton.addEventListener('click', () => {
+            updateCounter(0);
+        });
+
+        // Event listener for the color change button
+        colorChangeButton.addEventListener('click', () => {
+            currentColorIndex = (currentColorIndex + 1) % rainbowColors.length;
+            mainButton.style.backgroundColor = rainbowColors[currentColorIndex];
+        });
+
+        // Event listener for the theme toggle button
+        themeToggleButton.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const isCurrentlyDark = body.classList.contains('dark');
+
+            if (isCurrentlyDark) {
+                localStorage.theme = 'dark';
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                themeToggleButton.title = "Light Mode";
+            } else {
+                localStorage.theme = 'light';
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                themeToggleButton.title = "Dark Mode";
+            }
+        });
+
+        // Initialize the theme on page load
+        initializeTheme();
+    </script>
+</body>
+</html>
